@@ -78,7 +78,7 @@ function Home() {
                           className=' flex items-center justify-center gap-3'>
                           <Link to={'/home/auth'}
                               className='bg-emerald-500 px-6 py-2 rounded-md text-white text-lg cursor-pointer hover:bg-emerald-700'>
-                              Sign Up
+                              SignUp
                           </Link>
                       </motion.div>
                   )}
@@ -92,8 +92,8 @@ function Home() {
 
               <div>
                   <Routes>
-                      <Route path="/*" elements={<Projects />} />
-                      <Route path="/auth" elements={<SignUp />} />
+                      <Route path="/*" element={<Projects />} />
+                      <Route path="/auth" element={<SignUp />} />
                   </Routes>
               </div>
           </div>
