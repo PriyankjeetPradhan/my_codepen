@@ -3,18 +3,63 @@ import { UserAuthInput } from '../components'
 import { FaEnvelope, FaGithub } from 'react-icons/fa6';
 import { FcGoogle } from 'react-icons/fc';
 import { MdPassword } from 'react-icons/md';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { signInWithGitHub, signInWithGoogle } from '../utils/helpers';
+import { logo } from '../assets';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase.config';
+import { fadeInOut } from '../animations';
 
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [getEmailValidationStatus, setGetEmailValidationStatus] = useState(false);
   const [isLogin, setIsLogin] = useState(true)
+  const [alert, setAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState("")
+  
+  const createNewUser = async () => {
+    if (getEmailValidationStatus) {
+      await createUserWithEmailAndPassword(auth, email, password)
+        .then((userCred) => {
+          if (userCred) {
+            console.log(userCred);
+          }
+        }).catch((err) => console.log(err));
+    }
+  }
+
+  const loginWithEmailPassword = async () => {
+    if (getEmailValidationStatus) {
+      await signInWithEmailAndPassword(auth, email, password)
+        .then((userCred) => {
+          if (userCred) {
+            console.log(userCred);
+          }
+        }).catch((err) => {
+          console.log(err.message);
+          if (err.message.includes("user-not-found")) {
+            setAlert(true);
+            setAlertMessage("Invalid Id: User Not Found")
+          } else if (err.message.includes("invalid-credential")) {
+            setAlert(true);
+            setAlertMessage("Invalid Credentials");
+          } else {
+            setAlert(true);
+            setAlertMessage("Login Failed ")
+          }
+
+          setInterval(() => {
+            setAlert(false);
+          }, 3000);
+        });
+    }
+  }
+
   return (
     <div className="w-full py-6">
       <img
-        src=""
+        src={logo}
         className="object-contain w-32 opacity-50 h-auto"
         alt="logo"
       />
@@ -32,10 +77,23 @@ function SignUp() {
           setStateFunction={setPassword} Icon={MdPassword} />
 
           {/* alert section */}
-          
-          {/* login button */}
+          <AnimatePresence>
+            {alert && (
+              <motion.p
+                key={"AlertMessage"}
+                {...fadeInOut} 
+                className='text-red-500'
+              >
+                {alertMessage}
+              </motion.p>
+            )}
+          </AnimatePresence>
+        
+        {/* login button */}
+        
           {!isLogin ? (
             <motion.div
+              onClick={createNewUser}
               whileTap={{ scale: 0.9 }}
               className="flex items-center justify-center w-full py-3
               rounded-xl hover:bg-emerald-400 cursor-pointer bg-emerald-500">
@@ -43,6 +101,7 @@ function SignUp() {
             </motion.div>
           ) : (
               <motion.div
+                onClick={loginWithEmailPassword}
                 whileTap={{ scale: 0.9 }}
                 className="flex items-center justify-center w-full py-3
                 rounded-xl hover:bg-emerald-400 cursor-pointer bg-emerald-500">

@@ -4,11 +4,14 @@ import { MdHome } from 'react-icons/md';
 import { FaSearchengin } from 'react-icons/fa6';
 import { motion } from 'framer-motion';
 import { Link, Routes , Route} from 'react-router-dom';
-import { Projects , SignUp} from '../containers';
+import { Projects, SignUp } from '../containers';
+import { logo } from '../assets';
+import { useSelector } from 'react-redux';
+import { UserProfileDetails } from '../components';
 
 function Home() {
     const [isSideMenu, setIsSideMenu] = useState(false);
-    const [user, setUser] = useState(null);
+    const user = useSelector((state) => state.user?.user);
 
   return (
       <>
@@ -29,12 +32,12 @@ function Home() {
                   {/* logo */}
 
                   <Link to={"/home"}>
-                      <img src='' alt='Logo' className=' object-contain w-72 h-auto'/>
+                      <img src={logo} alt='Logo' className=' object-contain w-72 h-auto'/>
                   </Link>
 
                   {/* startCoding */}
 
-                  <Link to={'newProject'}>
+                  <Link to={'/newProject'}>
                       <div className=' px-6 py-3 flex items-center justify-center rounded-xl border border-gray-400 cursor-pointer group hover:border-gray-200'>
                         <p className=' text-gray-400 group-hover:text-gray-200 capitalize'>Start Coding</p>  
                       </div>
@@ -84,7 +87,7 @@ function Home() {
                   )}
 
                   {user && (
-                      <div></div>
+                      <UserProfileDetails />
                   )}
               </div>
 

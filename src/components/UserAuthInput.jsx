@@ -45,7 +45,7 @@ function UserAuthInput( {label, placeholder, isPass, setStateFunction, Icon, set
             whileTap={{ scale: 0.9 }}
             onClick={() => setShowPass(!showPass)}
             className="cursor-pointer">
-            {showPass ? (
+            {!showPass ? (
               <FaEye className="text-text555 text-2x1" />
             ) : (
                 <FaEyeSlash className="text-text555 text-2x1" />
